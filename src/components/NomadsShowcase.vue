@@ -2,8 +2,8 @@
   <section class="nomads-showcase-section">
     <div class="showcase-header">
       <div class="header-left">
-        <h2 class="showcase-title">个人成长履历与里程碑总结专家实战模板库</h2>
-        <p class="showcase-subtitle">精选典型场景与实战模版，点击“一键套用”快速体验</p>
+        <h2 class="showcase-title">实战案例与模板库 (Nomads Showcase)</h2>
+        <p class="showcase-subtitle">精选高频实战场景，点击“一键套用”快速生成高质量结果</p>
       </div>
       <span class="showcase-badge">已收录 {{ showcaseItems.length }} 个实战模板</span>
     </div>
@@ -16,7 +16,7 @@
       >
         <div class="card-header">
           <span class="scenario-tag">{{ item.tag }}</span>
-          <span class="usage-count">{{ item.usageCount }} 次生成</span>
+          <span class="usage-count">{{ item.usageCount }} 次应用</span>
         </div>
 
         <div class="card-content">
@@ -41,8 +41,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+const props = defineProps<{
+  appTitle?: string;
+  isImage?: boolean;
+}>();
+
 const emit = defineEmits<{
-  (e: 'apply-template', payload: { prompt: string }): void;
+  (e: 'apply-template', payload: { prompt: string; style?: string }): void;
 }>();
 
 export interface ShowcaseItem {
@@ -50,57 +55,105 @@ export interface ShowcaseItem {
   tag: string;
   title: string;
   prompt: string;
+  style?: string;
   usageCount: string;
 }
 
-const showcaseItems = computed<ShowcaseItem[]>(() => [
-  {
-    id: 'ai-lvcheng-1',
-    tag: '年度复盘',
-    title: '职场人年度个人成长与技能复盘',
-    prompt: '梳理今年在项目突破、团队管理及技能提升上的 5 大里程碑，并制定明年计划。',
-    usageCount: '50.1k'
-  },
-  {
-    id: 'ai-lvcheng-2',
-    tag: '大学总结',
-    title: '大学四年综合成长与成果履历',
-    prompt: '回顾大学四年在学术 GPA、竞赛获奖、社团干部及实习履历上的全方位成长轨迹。',
-    usageCount: '45.6k'
-  },
-  {
-    id: 'ai-lvcheng-3',
-    tag: '创业复盘',
-    title: '连续创业者 3 年踩坑与认知进化',
-    prompt: '总结创业 3 年在产品定位、团队招募及现金流管控上的核心教训与能力沉淀。',
-    usageCount: '39.8k'
-  },
-  {
-    id: 'ai-lvcheng-4',
-    tag: '三十而立',
-    title: '30 岁人生节点回顾与下半场规划',
-    prompt: '站在 30 岁的人生节点，梳理过去 10 年职场与生活得失，规划未来 5 年核心目标。',
-    usageCount: '35.2k'
-  },
-  {
-    id: 'ai-lvcheng-5',
-    tag: '自由职业',
-    title: '自由职业者首年收入与心态总结',
-    prompt: '复盘转行自由职业第 1 年的客户开拓、时间管理及财务收益增长历程。',
-    usageCount: '31.4k'
-  },
-  {
-    id: 'ai-lvcheng-6',
-    tag: '项目复盘',
-    title: '重大攻坚项目全流程复盘报告',
-    prompt: '针对历时 6 个月的核心产品上线攻坚战，总结项目管理经验与团队协同 SOP。',
-    usageCount: '28.2k'
+// 模拟实战案例数据库（支持根据文本/图像类及应用主题切换）
+const showcaseItems = computed<ShowcaseItem[]>(() => {
+  if (props.isImage) {
+    return [
+      {
+        id: 'img-1',
+        tag: '写真肖像',
+        title: '商务精英形象照',
+        prompt: '高端写字楼背景，身穿深蓝色西装，眼神自信专注，赛博朋克光影效果',
+        style: '<photography>',
+        usageCount: '18.5k'
+      },
+      {
+        id: 'img-2',
+        tag: '概念插画',
+        title: '未来科幻城市海报',
+        prompt: '霓虹灯光的赛博朋克立体城市，飞行汽车，高品质概念插画，8k分辨率',
+        style: '<illustration>',
+        usageCount: '24.1k'
+      },
+      {
+        id: 'img-3',
+        tag: '二次元动漫',
+        title: '日系国潮动漫角色',
+        prompt: '穿着现代汉服的国风少年，手持纸伞，水彩漫感，唯美光感与柔光滤镜',
+        style: '<anime>',
+        usageCount: '15.9k'
+      },
+      {
+        id: 'img-4',
+        tag: '水彩艺术',
+        title: '治愈系自然风景画',
+        prompt: '晨雾中的森林湖泊，阳光穿透树林，水彩渐变质感，温馨治愈风格',
+        style: '<watercolor>',
+        usageCount: '12.3k'
+      }
+    ];
+  } else {
+    return [
+      {
+        id: 'text-1',
+        tag: '职场总结',
+        title: '周报 OKR 成果提炼',
+        prompt: '本周完成了核心模块优化与线上异常排查，请帮我梳理为具备量化指标的 OKR 汇报文案',
+        style: '专业干练，结果导向',
+        usageCount: '32.8k'
+      },
+      {
+        id: 'text-2',
+        tag: '高情商沟通',
+        title: '拒绝不合理加班话术',
+        prompt: '领导在周末突然布置非紧急任务，如何高情商、委婉且有理有据地推迟到工作日处理？',
+        style: '高情商，委婉，有情调',
+        usageCount: '28.4k'
+      },
+      {
+        id: 'text-3',
+        tag: '短视频文案',
+        title: '知识干货吸睛开头',
+        prompt: '准备制作一条关于高效学习法的短视频，设计 3 个能在前 3 秒留住用户的爆款口播开头',
+        style: '专业干练，结果导向',
+        usageCount: '45.1k'
+      },
+      {
+        id: 'text-4',
+        tag: '商务公文',
+        title: '跨部门协同申请函',
+        prompt: '因项目上线需要研发部门配合联调，撰写一份正式、严谨且明确时间节点的协同申请书',
+        style: '专业干练，结果导向',
+        usageCount: '19.7k'
+      },
+      {
+        id: 'text-5',
+        tag: '小红书种草',
+        title: '实战干货笔记排版',
+        prompt: '分享 5 个提升日常工作效率的文字工具，语言亲切，搭配吸引人的标题与 Emoji 排版',
+        style: '高情商，委婉，有情调',
+        usageCount: '36.2k'
+      },
+      {
+        id: 'text-6',
+        tag: '学术润色',
+        title: '论文摘要与结论重构',
+        prompt: '将以下粗糙的研究结论重写为学术规范、逻辑严密且无语法语病的论文摘要总结',
+        style: '专业干练，结果导向',
+        usageCount: '22.0k'
+      }
+    ];
   }
-]);
+});
 
 function applyTemplate(item: ShowcaseItem) {
   emit('apply-template', {
-    prompt: item.prompt
+    prompt: item.prompt,
+    style: item.style
   });
 }
 </script>
